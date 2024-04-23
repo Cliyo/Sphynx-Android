@@ -6,4 +6,5 @@
     <string name="logo_desc">Logo: Silhueta de um gato da raça sphynx com o rosto virado para o lado direito</string>
     <string name="empty_login">E-mail não pode estar vazio</string>
     <string name="empty_password">Senha não pode estar vazia</string>
+    <string name="ok">Ok</string>
 </resources>

@@ -1,46 +1,52 @@
 package com.cliyo.sphynx
 
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-import android.os.AsyncTask
 import org.json.JSONObject
 
 class MainActivity : ComponentActivity() {
+    companion object {
+        const val LOGIN_CRED = "login_cred"
+        const val EMAIL_KEY = "email_key"
+        const val PASSWORD_KEY = "password_key"
+    }
+
+    private lateinit var sharedpreferences: SharedPreferences
+    private var email: String? = null
+    private var password: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_page)
         adjustFields()
 
-        lateinit var email: EditText
-        lateinit var senha: EditText
-
         val passwordInput = findViewById<EditText>(R.id.password_input)
         val usernameInput = findViewById<EditText>(R.id.username_input)
         val loginBtn = findViewById<Button>(R.id.login_button)
 
-        loginBtn.setOnClickListener{
-            var username = usernameInput.text.toString()
-            var password = passwordInput.text.toString()
+        sharedpreferences = getSharedPreferences(LOGIN_CRED, Context.MODE_PRIVATE)
 
-            println(username)
-            println(password)
+        email = sharedpreferences.getString(EMAIL_KEY, null)
+        password = sharedpreferences.getString(PASSWORD_KEY, null)
 
-            if(checkField(username, password)){
-                login(username, password)
+        loginBtn.setOnClickListener {
+            email = usernameInput.text.toString()
+            password = passwordInput.text.toString()
+
+            if (checkField(email, password)) {
+                login(email, password)
             }
-
         }
     }
 
-    private fun adjustFields(){
+    private fun adjustFields() {
         val passwordInput = findViewById<EditText>(R.id.password_input)
         val usernameInput = findViewById<EditText>(R.id.username_input)
         val displayMetrics = DisplayMetrics()
@@ -52,15 +58,16 @@ class MainActivity : ComponentActivity() {
         usernameInput.layoutParams.width = editTextWidth
     }
 
-    private fun checkField(username: String = "", password: String = ""): Boolean{
+    private fun checkField(username: String?, password: String?): Boolean {
         var mensagem: Toast
-        if (username.trim().equals("")){
+        if (username?.trim().equals("")) {
             mensagem = Toast.makeText(applicationContext, R.string.empty_login, Toast.LENGTH_SHORT)
             mensagem.show()
             return false
         }
-        if (password.trim().equals("")){
-            mensagem = Toast.makeText(applicationContext, R.string.empty_password, Toast.LENGTH_SHORT)
+        if (password?.trim().equals("")) {
+            mensagem =
+                Toast.makeText(applicationContext, R.string.empty_password, Toast.LENGTH_SHORT)
             mensagem.show()
             return false
         }
@@ -68,59 +75,38 @@ class MainActivity : ComponentActivity() {
         return true
     }
 
-    private inner class loginRequest: AsyncTask<String, Void, Int>(){
-        override fun doInBackground(vararg credenciais: String): Int{
-            val username = credenciais[0]
-            val password = credenciais[1]
-
-            var resposta = 0
-            try {
-                val jsonData = JSONObject()
-                jsonData.put("user", username)
-                jsonData.put("password", password)
-
-                println(jsonData)
-
-                val requestBody = jsonData.toString().toByteArray()
-                val mURL = URL("http://192.168.0.108:8080/login")
-                //TODO: Criar um finder para achar o ip da API
-                // OU criar uma funcao para setar manualmente
-
-                with(mURL.openConnection() as HttpURLConnection) {
-                    requestMethod = "POST"
-                    setRequestProperty("Content-Type", "application/json")
-                    setRequestProperty("Accept", "application/json")
-                    doOutput = true
-
-                    outputStream.write(requestBody)
-                    outputStream.flush()
-
-                    resposta = responseCode
-
-                    BufferedReader(InputStreamReader(inputStream)).use {
-                        val response = StringBuffer()
-
-                        var inputLine = it.readLine()
-                        while (inputLine != null) {
-                            response.append(inputLine)
-                            inputLine = it.readLine()
-                        }
-                        println("Response : $response")
-                    }
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return resposta
-        }
-
-        override fun onPostExecute(result: Int) {
-            val mensagem = Toast.makeText(applicationContext, "$result", Toast.LENGTH_SHORT)
+    private fun login(username: String?, password: String?) {
+        val requests = Requests { resposta ->
+            val mensagem = Toast.makeText(applicationContext, "$resposta", Toast.LENGTH_SHORT)
             mensagem.show()
+
+            if (resposta == 200) {
+                sharedpreferences = getSharedPreferences(LOGIN_CRED, Context.MODE_PRIVATE)
+                val editor = sharedpreferences.edit()
+
+                editor.putString(EMAIL_KEY, username)
+                editor.putString(PASSWORD_KEY, password)
+
+                editor.apply()
+
+                val home = Intent(this@MainActivity, HomeActivity::class.java)
+                startActivity(home)
+                finish()
+            }
+        }
+        val dados = JSONObject()
+        dados.put("user", username)
+        dados.put("password", password)
+
+        requests.request("POST", "login", dados)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (email != null && password != null) {
+            val home = Intent(this@MainActivity, HomeActivity::class.java)
+            startActivity(home)
         }
 
-    }
-    private fun login(username: String, password: String) {
-        loginRequest().execute(username, password)
     }
 }
