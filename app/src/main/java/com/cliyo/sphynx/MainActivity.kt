@@ -25,37 +25,24 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_page)
-        adjustFields()
 
-        val passwordInput = findViewById<EditText>(R.id.password_input)
-        val usernameInput = findViewById<EditText>(R.id.username_input)
+        val passwordInput: EditText = findViewById<EditText>(R.id.password_input)
+        val usernameInput: EditText = findViewById<EditText>(R.id.username_input)
         val loginBtn = findViewById<Button>(R.id.login_button)
 
         sharedpreferences = getSharedPreferences(LOGIN_CRED, Context.MODE_PRIVATE)
 
-        email = sharedpreferences.getString(EMAIL_KEY, null)
-        password = sharedpreferences.getString(PASSWORD_KEY, null)
+        this.email = sharedpreferences.getString(EMAIL_KEY, null)
+        this.password = sharedpreferences.getString(PASSWORD_KEY, null)
 
         loginBtn.setOnClickListener {
-            email = usernameInput.text.toString()
-            password = passwordInput.text.toString()
+            this.email = usernameInput.text.toString()
+            this.password = passwordInput.text.toString()
 
-            if (checkField(email, password)) {
-                login(email, password)
+            if (checkField(this.email, this.password)) {
+                login(this.email, this.password)
             }
         }
-    }
-
-    private fun adjustFields() {
-        val passwordInput = findViewById<EditText>(R.id.password_input)
-        val usernameInput = findViewById<EditText>(R.id.username_input)
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        val displayWidth = displayMetrics.widthPixels
-        val editTextWidth = (displayWidth * 0.77).toInt()
-
-        passwordInput.layoutParams.width = editTextWidth
-        usernameInput.layoutParams.width = editTextWidth
     }
 
     private fun checkField(username: String?, password: String?): Boolean {
