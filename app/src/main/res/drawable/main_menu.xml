@@ -13,7 +13,7 @@
                 android:topRightRadius="15dp" />
         </shape>
     </item>
-    <item android:right="5dp" android:bottom="5dp">
+    <item android:right="4dp" android:bottom="5dp" android:top="2dp" android:left="2dp">
         <shape>
             android:shape="rectangle"
             android:padding="10dp">

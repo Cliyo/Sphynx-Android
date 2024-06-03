@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background">#FF024959</color>
-    <color name="background_bright">#FF026773</color>
+    <color name="background_bright">#FF027381</color>
     <color name="color_gray">#FFD9D9D9</color>
     <color name="color_gray_darker">#59383838</color>
     <color name="color_submenu">#FF022534</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="color_table_dark">#FF026773</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

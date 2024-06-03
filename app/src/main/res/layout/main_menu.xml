@@ -1,10 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".MainActivity">
+    android:background="@color/white"
+    tools:context=".MainActivitys">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:layout_centerInParent="true"
+        android:background="@drawable/main_menu"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="20dp"
+            android:layout_gravity="fill_horizontal"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_marginStart="30dp"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@mipmap/ic_launcher" />
+
+            <Space
+                android:layout_width="45dp"
+                android:layout_height="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:font="@font/archivoblack_regular"
+                android:gravity="center"
+                android:text="SPHYNX"
+                android:textColor="@color/white"
+                android:textSize="40sp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="30dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/acess_register"
+                android:textColor="@color/white"
+                android:textSize="25sp" />
+        </RelativeLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="2dp" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:background="@color/color_table_dark">
+            <TableRow
+                android:clickable="true">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/acess_register_view_all"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/acess_register_view_date"
+                    android:textColor="@color/white"
+                    android:clickable="true"
+                    android:contextClickable="true"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/acess_register_view_local"
+                    android:textColor="@color/white"
+                    android:clickable="true"
+                    android:contextClickable="true"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"/>
+            </TableRow>
+            <TableRow>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/acess_register_view_user"
+                    android:textColor="@color/white"
+                    android:clickable="true"
+                    android:contextClickable="true"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp"/>
+            </TableRow>
+        </TableLayout>
+        </LinearLayout>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="20dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/users"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:layout_marginStart="30dp"/>
+
+        </RelativeLayout>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="20dp"/>
+
+    </LinearLayout>
 </RelativeLayout>

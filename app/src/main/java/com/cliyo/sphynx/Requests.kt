@@ -19,7 +19,7 @@ class Requests (private val callback: (Int) -> Unit) {
                 println(dados)
 
                 val requestBody = dados?.toByteArray()
-                val mURL = URL("http://192.168.0.108:8080/$url")
+                val mURL = URL("http://sphynx-api.local/$url")
 
                 with(mURL.openConnection() as HttpURLConnection) {
                     requestMethod = metodo
@@ -59,5 +59,12 @@ class Requests (private val callback: (Int) -> Unit) {
     fun request(metodo: String, url: String, dados: JSONObject) {
         RequestsTask().execute(metodo, url, dados.toString())
     }
+
+//    fun testConexao(apiUrls: List<String>){
+//        for (i in apiUrls){
+//            RequestsTask().execute("GET", i,)
+//        }
+//
+//    }
 }
 

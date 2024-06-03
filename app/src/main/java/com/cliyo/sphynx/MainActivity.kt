@@ -1,99 +1,55 @@
 package com.cliyo.sphynx
 
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.webkit.CookieManager
+import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.DisplayMetrics
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
+import android.webkit.JavascriptInterface
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
-import org.json.JSONObject
+
 
 class MainActivity : ComponentActivity() {
-    companion object {
-        const val LOGIN_CRED = "login_cred"
-        const val EMAIL_KEY = "email_key"
-        const val PASSWORD_KEY = "password_key"
-    }
-
-    private lateinit var sharedpreferences: SharedPreferences
-    private var email: String? = null
-    private var password: String? = null
-
+    private lateinit var myWebView: WebView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_page)
+        setContentView(R.layout.webview)
 
-        val passwordInput: EditText = findViewById<EditText>(R.id.password_input)
-        val usernameInput: EditText = findViewById<EditText>(R.id.username_input)
-        val loginBtn = findViewById<Button>(R.id.login_button)
+        val myWebView: WebView = findViewById(R.id.webview)
+        myWebView.setWebViewClient(WebViewClient())
+        CookieManager.getInstance().setAcceptCookie(true)
+        CookieManager.getInstance().setAcceptThirdPartyCookies(myWebView, true)
+        myWebView.loadUrl("http://100.119.19.90")
+        val webSettings: WebSettings = myWebView.getSettings()
+        webSettings.javaScriptEnabled = true
+        webSettings.domStorageEnabled = true
 
-        sharedpreferences = getSharedPreferences(LOGIN_CRED, Context.MODE_PRIVATE)
-
-        this.email = sharedpreferences.getString(EMAIL_KEY, null)
-        this.password = sharedpreferences.getString(PASSWORD_KEY, null)
-
-        loginBtn.setOnClickListener {
-            this.email = usernameInput.text.toString()
-            this.password = passwordInput.text.toString()
-
-            if (checkField(this.email, this.password)) {
-                login(this.email, this.password)
-            }
-        }
     }
 
-    private fun checkField(username: String?, password: String?): Boolean {
-        var mensagem: Toast
-        if (username?.trim().equals("")) {
-            mensagem = Toast.makeText(applicationContext, R.string.empty_login, Toast.LENGTH_SHORT)
-            mensagem.show()
-            return false
-        }
-        if (password?.trim().equals("")) {
-            mensagem =
-                Toast.makeText(applicationContext, R.string.empty_password, Toast.LENGTH_SHORT)
-            mensagem.show()
-            return false
+    class mywebClient : WebViewClient() {
+        override fun onPageStarted(view: WebView, url: String, favicon: Bitmap) {
+            super.onPageStarted(view, url, favicon)
         }
 
-        return true
+        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+            view.loadUrl(url)
+            return true
+        }
     }
+//    class WebAppInterface(private val mContext: Context) {
+//        @JavascriptInterface
+//        fun showToast(toast: String) {
+//            Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show()
+//        }
+//    }
 
-    private fun login(username: String?, password: String?) {
-        val requests = Requests { resposta ->
-            val mensagem = Toast.makeText(applicationContext, "$resposta", Toast.LENGTH_SHORT)
-            mensagem.show()
-
-            if (resposta == 200) {
-                sharedpreferences = getSharedPreferences(LOGIN_CRED, Context.MODE_PRIVATE)
-                val editor = sharedpreferences.edit()
-
-                editor.putString(EMAIL_KEY, username)
-                editor.putString(PASSWORD_KEY, password)
-
-                editor.apply()
-
-                val home = Intent(this@MainActivity, HomeActivity::class.java)
-                startActivity(home)
-                finish()
-            }
+    override fun onBackPressed() {
+        if (myWebView.canGoBack()) {
+            myWebView.goBack()
+        } else {
+            super.onBackPressed()
         }
-        val dados = JSONObject()
-        dados.put("user", username)
-        dados.put("password", password)
-
-        requests.request("POST", "login", dados)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (email != null && password != null) {
-            val home = Intent(this@MainActivity, HomeActivity::class.java)
-            startActivity(home)
-        }
-
     }
 }
